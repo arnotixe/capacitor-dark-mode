@@ -92,9 +92,11 @@ export default class DarkModeBase extends WebPlugin {
             darkMode = data.dark;
         }
         if (this.getter) {
+            console.log('getter defined, run it');
             // The user changed the appearance and triggered an update,
             // so we need to get the new appearance.
             const getterResult = await this.getter();
+            console.log('getterresult', getterResult);
             if (getterResult) {
                 this.appearance = getterResult;
             }
@@ -102,12 +104,15 @@ export default class DarkModeBase extends WebPlugin {
         // If the appearance changed and is system, get the current dark mode.
         if (this.appearance === DarkModeAppearance.system) {
             darkMode = (await this.isDarkMode()).dark;
+            console.log('appearance is system, go with darkMode', darkMode);
         }
         else {
             // Otherwise, use the new appearance to determine the dark mode.
             // Note at this point, this.isDark is the previous dark mode.
             darkMode = this.appearance === DarkModeAppearance.dark;
+            console.log('appearance is system, go with darkMode', this.appearance, darkMode);
         }
+        console.log('now apply darkMode css or remove it', darkMode);
         this.disableTransitions();
         document.body.classList[darkMode ? 'add' : 'remove'](this.darkModeClass);
         this.enableTransitions();
